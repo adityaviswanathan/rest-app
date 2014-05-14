@@ -13,4 +13,13 @@ router.get('/userlist', function(req, res) {
 	});
 });
 
+router.post('/adduser', function(req, res) {
+	var db = req.db;
+	db.collection('usercollection').insert(req.body, function(err, result) {
+		res.send(
+			(err == null) ? { msg : '' } : { msg : err }
+		);
+	});	
+});
+
 module.exports = router;

@@ -4,13 +4,16 @@ $(document).ready(function() {
 	populateTable();
 	$('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 	$('#btnAddUser').on('click', addUser);
+	$('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 });
 
 function populateTable() {
+	console.log("HIT");
 	var tableContent = '';
 	$.getJSON( '/users/userlist', function(data) {
 		userListData = data;
 		$.each(data, function() {
+			console.log(this.username);
 			tableContent += '<tr>';
 			tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.username + '" title="Show Details">' + this.username + '</td>';
 			tableContent += '<td>' + this.email + '</td>';
@@ -70,6 +73,27 @@ function addUser(event) {
         });
 	} else {
 		alert('Please fill in all fields');
+		return false;
+	}
+};
+
+function deleteUser(event) {
+	event.preventDefault();
+
+	var confirmation = confirm('Are you sure you want to delete this user?');
+
+	if(confirmation) {
+		$.ajax({
+			type : 'DELETE',
+			url : '/users/deleteuser/' + $(this).attr('rel')
+		}).done(function(response) {
+			if(response.msg == '') {				
+			} else {
+				alert('Error: ' + response.msg);
+			}
+			populateTable();
+		});		
+	} else {
 		return false;
 	}
 };

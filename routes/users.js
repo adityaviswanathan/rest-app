@@ -22,4 +22,12 @@ router.post('/adduser', function(req, res) {
 	});	
 });
 
+router.delete('/deleteuser/:id', function(req, res) {
+	var db = req.db;
+	var userToDelete = req.params.id;
+	db.collection('usercollection').removeById(userToDelete, function(err, result) {
+		res.send((result == 1) ? { msg : '' } : { msg : err });
+	});
+});
+
 module.exports = router;
